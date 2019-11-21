@@ -8,7 +8,9 @@ import dao.KundeDAO;
 import dao.KundeDummyDAO;
 import dao.KundeHibernateDAO;
 import dao.KundeMySQLDAO;
+import exception.DBException;
 import model.Kunde;
+import util.JSFUtil;
 
 @SessionScoped // "Lebensdauer" Fehler: NullPointerException
 @ManagedBean
@@ -20,10 +22,16 @@ public class KundeBean {
 	// wird aufgerufen nach dem Constructor
 	@PostConstruct
 	public void init() {
-		kunde = new Kunde();
-//		dao = new KundeDummyDAO();
-//		dao = new KundeMySQLDAO();
-		dao = new KundeHibernateDAO();
+		try {
+			kunde = new Kunde();
+//			dao = new KundeDummyDAO();
+//			dao = new KundeMySQLDAO();
+			dao = new KundeHibernateDAO();
+		} catch (DBException e) {
+			JSFUtil.setErrorMessage("Keine Datenbankverbindung!");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public Kunde getKunde() {

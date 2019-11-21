@@ -6,13 +6,15 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
+import exception.DBException;
+
 /**
  * @author imssbora
  */
 public class HibernateUtil {
 	private static StandardServiceRegistry registry;
 	private static SessionFactory sessionFactory;
-	public static SessionFactory getSessionFactory() {
+	public static SessionFactory getSessionFactory() throws DBException {
 		if (sessionFactory == null) {
 			try {
 				// Create registry
@@ -28,10 +30,12 @@ public class HibernateUtil {
 				sessionFactory = metadata.getSessionFactoryBuilder().build();
 
 			} catch (Exception e) {
-				e.printStackTrace();
+//				e.printStackTrace();
 				if (registry != null) {
 					StandardServiceRegistryBuilder.destroy(registry);
 				}
+				System.out.println("HibernateSessionFactory Fehler");
+				throw new DBException();
 			}
 		}
 		return sessionFactory;
